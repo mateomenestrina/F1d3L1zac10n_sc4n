@@ -1,0 +1,139 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1, maximum-scale=1">
+ 
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		
+		<script src="libs/jquery-1.8.3.min.js"></script>
+		<script src="libs/jquery-barcode.min.js"></script>
+		<script src="libs/jquery.transit.min.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="estilo.css">
+
+	</head>
+
+	<body>
+
+		
+		<script src="cordova.js"></script>
+
+		<script src="js/Boton.js"></script>
+
+		<script>
+			
+			var SERVER = 'http://192.168.235.153/fidelizacion_server/';
+			var btn_scan;
+
+			document.addEventListener('deviceready', deviceready, false);
+
+			function deviceready(){
+
+				btn_scan = new Boton("SCAN", doScan, 'BotonAzul')
+				btn_scan.main.id = 'connect'
+				$('#connect').append(btn_scan.main)
+
+					
+			}	
+
+			function enviar_compra($compra_valor, $puntos, $code){
+
+					$('#loading').show()
+					$.ajax({
+
+							type: "GET",
+							url: SERVER + "xml.set.php",
+							dataType: 'xml',
+							cache: false, 
+							data:{'compra_valor': $compra_valor, 'puntos': $puntos, 'code':$code},
+
+							success: function($xml) {
+								
+							
+								$('#loading').hide();
+								
+							},
+							error: function(){ 
+								$('#loading').hide()
+							}
+					});
+
+			}
+
+			function doScan(){
+				 
+				 cordova.plugins.barcodeScanner.scan(
+				      function (result) {
+
+				      	
+				          /*alert("We got a barcode\n" +
+				                "Result: " + + "\n" +
+				                "Format: " + result.format + "\n" +
+				                "Cancelled: " + );*/
+
+				 		 // (result.text);
+
+				         $('#ultima_compra').show()
+				      	
+				         var compra_valor = Math.round(Math.random()*1000);
+				         var puntos = Math.ceil((compra_valor/10));
+
+
+				         $('#ultima_precio').html(compra_valor + ' $SU ' + result.text)
+				         $('#ultima_puntos').html(puntos + ' pts. ' + result.cancelled)
+
+
+
+				         enviar_compra(compra_valor, puntos, result.text);
+
+
+
+				        setTimeout(function(){
+
+				         	$('#ultima_compra').hide()
+
+				        }, 4000);
+
+
+				          
+				      }, 
+
+				      function (error) {
+				           $('#ultima_compra').hide()
+				      }
+				   );
+
+			}
+
+		
+	
+		
+		</script>
+
+	<div id='content'>
+
+		<div id='oprime'>Oprime scan para realizar una venta</div>
+		
+		<div id='ultima_compra' style='display:none'>
+			
+			<div id='ultima_txt'>última venta</div>
+			<div id='ultima_precio'></div>
+			<div id='ultima_puntos'></div>
+
+		</div> 
+
+		<div id="connect" >
+
+
+
+	    </div> 
+
+        <div id="loading" style='display:none;'><div id="txt_loading"></div><div class="spinner"><div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div><div class="bar7"></div><div class="bar8"></div><div class="bar9"></div><div class="bar10"></div><div class="bar11"></div><div class="bar12"></div></div></div>
+		
+      </div>
+
+	</body>
+</html>
