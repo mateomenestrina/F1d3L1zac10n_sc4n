@@ -25,7 +25,8 @@
 
 		<script>
 			
-			var SERVER = 'http://192.168.235.153/fidelizacion_server/';
+			//var SERVER = 'http://192.168.235.153/fidelizacion_server/';
+			var SERVER = 'http://www.mdinteractivo.com/fidelizacion_server/';
 			var btn_scan;
 
 			document.addEventListener('deviceready', deviceready, false);
@@ -83,10 +84,10 @@
 
 
 				         $('#ultima_precio').html(compra_valor + ' $SU ' + result.text)
-				         $('#ultima_puntos').html(puntos + ' pts. ' + result.cancelled)
+				         $('#ultima_puntos').html(puntos + ' pts. ')
 
 
-
+				         if(result.cancelled==0)
 				         enviar_compra(compra_valor, puntos, result.text);
 
 
