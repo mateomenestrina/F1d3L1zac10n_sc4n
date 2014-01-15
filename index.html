@@ -77,20 +77,21 @@
 
 				 		 // (result.text);
 
-				         $('#ultima_compra').show()
 				      	
 				         var compra_valor = Math.round(Math.random()*1000);
 				         var puntos = Math.ceil((compra_valor/10));
 
 
-				         $('#ultima_precio').html(compra_valor + ' $SU ' + result.text)
-				         $('#ultima_puntos').html(puntos + ' pts. ')
+				        
 
+				         if(result.cancelled==0){
+				         		
+			         		enviar_compra(compra_valor, puntos, result.text);
+			         	 	$('#ultima_compra').show()
+			         		$('#ultima_precio').html(compra_valor + ' $SU ')
+			         		$('#ultima_puntos').html(puntos + ' pts. ')
 
-				         if(result.cancelled==0)
-				         enviar_compra(compra_valor, puntos, result.text);
-
-
+				         }
 
 				        setTimeout(function(){
 
